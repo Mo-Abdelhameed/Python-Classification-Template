@@ -3,5 +3,3 @@ __pycache__
 .idea/
 test.py
 model_inputs_outputs/model/
-train.py
-predict.py
