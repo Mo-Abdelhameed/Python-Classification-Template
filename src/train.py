@@ -87,10 +87,11 @@ during training to reuse these values during testing. """
 imputation_values = {}
 columns_with_missing_values = df.columns[df.isna().any()]
 for column in columns_with_missing_values:
-    if column in categorical_features:
-        value = df[column].mode()[0]
-    elif column in numeric_features:
+    if column in numeric_features:
         value = df[column].median()
+    else:
+        value = df[column].mode()[0]
+
     df[column].fillna(value, inplace=True)
     imputation_values[column] = value
 dump(imputation_values, IMPUTATION_FILE)
