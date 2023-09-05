@@ -6,6 +6,7 @@ import pandas as pd
 import warnings
 from sklearn.linear_model import LogisticRegression
 from feature_engine.encoding import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
 from joblib import dump
 
 warnings.filterwarnings('ignore')
@@ -25,7 +26,7 @@ OHE_ENCODER_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'ohe.joblib')
 PREDICTOR_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "predictor")
 PREDICTOR_FILE_PATH = os.path.join(PREDICTOR_DIR_PATH, "predictor.joblib")
 IMPUTATION_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'imputation.joblib')
-TARGET_ENCODE_DICT_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'target_encoder_dict.joblib')
+LABEL_ENCODER_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'label_encoder.joblib')
 if not os.path.exists(MODEL_ARTIFACTS_PATH):
     os.makedirs(MODEL_ARTIFACTS_PATH)
 if not os.path.exists(PREDICTOR_DIR_PATH):
@@ -134,19 +135,17 @@ if categorical_features:
 
 
 # Encoding the target feature
-target_encoder_dict = {}
-for i, target_class_category in enumerate(target_classes):
-    target_encoder_dict[target_class_category] = i
-dump(target_encoder_dict, TARGET_ENCODE_DICT_FILE)
-target = target.astype(str)
-target = target.map(target_encoder_dict)
+encoder = LabelEncoder()
+y = encoder.fit_transform(target.values.reshape(-1, 1))
+dump(encoder, LABEL_ENCODER_FILE)
+
 
 # Training the Classifier
 # We choose Logistic Regression Classifier, but feel free to try your own and compare the results.
 
 # Creating a logistic regression model and training it
 model = LogisticRegression()
-model.fit(df, target)
+model.fit(df, y)
 
 """
 BEGIN

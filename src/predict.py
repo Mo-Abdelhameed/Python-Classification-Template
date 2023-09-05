@@ -26,6 +26,7 @@ PREDICTOR_FILE_PATH = os.path.join(PREDICTOR_DIR_PATH, "predictor.joblib")
 IMPUTATION_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'imputation.joblib')
 PREDICTIONS_DIR = os.path.join(OUTPUT_DIR, 'predictions')
 PREDICTIONS_FILE = os.path.join(PREDICTIONS_DIR, 'predictions.csv')
+LABEL_ENCODER_FILE = os.path.join(MODEL_ARTIFACTS_PATH, 'label_encoder.joblib')
 if not os.path.exists(PREDICTIONS_DIR):
     os.makedirs(PREDICTIONS_DIR)
 
@@ -89,8 +90,9 @@ if os.path.exists(OHE_ENCODER_FILE):
 model = load(PREDICTOR_FILE_PATH)
 predictions = model.predict_proba(df)
 
-
 # Getting the original labels.
-predictions = pd.DataFrame(predictions, columns=target_classes)
+encoder = load(LABEL_ENCODER_FILE)
+class_names = encoder.inverse_transform(range(len(target_classes)))
+predictions = pd.DataFrame(predictions, columns=class_names)
 predictions.insert(0, id_feature, ids)
 predictions.to_csv(PREDICTIONS_FILE)
