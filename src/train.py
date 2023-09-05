@@ -1,4 +1,3 @@
-
 # Imports
 # DO NOT CHANGE THESE LINES.
 import os
@@ -63,7 +62,6 @@ target_classes = schema['target']['classes']
 file_name = [f for f in os.listdir(TRAIN_DIR) if f.endswith('.csv')][0]
 file_path = os.path.join(TRAIN_DIR, file_name)
 df = pd.read_csv(file_path)
-df.head()
 
 # Data Preprocessing
 """
@@ -132,17 +130,16 @@ if categorical_features:
     df = encoder.transform(df)
 
     # Saving the encoder to use it on the testing dataset
-    path = dump(encoder, OHE_ENCODER_FILE)
+    dump(encoder, OHE_ENCODER_FILE)
 
 
 # Encoding the target feature
 target_encoder_dict = {}
 for i, target_class_category in enumerate(target_classes):
     target_encoder_dict[target_class_category] = i
-
 dump(target_encoder_dict, TARGET_ENCODE_DICT_FILE)
+target = target.astype(str)
 target = target.map(target_encoder_dict)
-
 
 # Training the Classifier
 # We choose Logistic Regression Classifier, but feel free to try your own and compare the results.
