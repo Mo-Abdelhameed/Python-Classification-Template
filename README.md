@@ -45,7 +45,7 @@ In this section we cover the following:
 2. Build the image. You can use the following command: <br/>
    `docker build -t classifier_img .` <br/>
    Here `classifier_img` is the name given to the container (you can choose any name).
-3. Note the following before running the container for train, batch prediction or inference service:
+3. Note the following before running the container for train, batch prediction:
    - The train, batch predictions tasks and inference service tasks require a bind mount to be mounted to the path `/opt/model_inputs_outputs/` inside the container. You can use the `-v` flag to specify the bind mount.
    - When you run the train or batch prediction tasks, the container will exit by itself after the task is complete. When the inference service task is run, the container will keep running until you stop or kill it.
    - When you run training task on the container, the container will save the trained model artifacts in the specified path in the bind mount. This persists the artifacts even after the container is stopped or killed.
